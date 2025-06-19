@@ -88,12 +88,6 @@ The starter provides:
 
 ---
 
-## 📸 Screenshots
-
-> _(Add a few screenshots of your UI here to give a nice visual preview.)_
-
----
-
 ## 🧩 Extending It
 
 - ✅ Add social login with OAuth
