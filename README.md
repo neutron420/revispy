@@ -111,7 +111,7 @@ Contributions are welcome! Feel free to open issues or submit PRs to make this t
 
 ## 📄 License
 
-MIT © [Rites Kumar Singh](https://github.com/neutron420)
+MIT © [Ritesh Kumar Singh](https://github.com/neutron420)
 
 ---
 
