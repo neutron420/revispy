@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,31 +8,27 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  firstName   String
-  lastName    String
-  password    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Many-to-many relationship with categories
-  categories  UserCategory[]
-  
+  id         String         @id @default(cuid())
+  email      String         @unique
+  firstName  String
+  lastName   String
+  password   String
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  categories UserCategory[]
+
   @@map("users")
 }
 
 model Category {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String         @id @default(cuid())
+  name        String         @unique
   description String?
   imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Many-to-many relationship with users
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   users       UserCategory[]
-  
+
   @@map("categories")
 }
 
@@ -43,10 +37,9 @@ model UserCategory {
   userId     String
   categoryId String
   createdAt  DateTime @default(now())
-  
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, categoryId])
   @@map("user_categories")
 }
