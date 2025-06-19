@@ -41,8 +41,8 @@ A modern and flexible **Login & Authentication** starter built with the latest f
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/revispy-auth-starter.git
-cd revispy-auth-starter
+git clone https://github.com/neutron420/revispy-auth-starter.git
+cd revispy
 
 # Install dependencies
 npm install
