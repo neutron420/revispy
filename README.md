@@ -9,6 +9,8 @@ A modern and flexible **Login & Authentication** starter built with the latest f
 - **JWT** (Authentication Tokens)
 
 > Ready to be adapted for any authentication use case across web applications.
+ 
+> This starter uses [**Neon DB**](https://neon.tech) — a modern serverless PostgreSQL provider — for testing performance and scalability in the cloud (AWS).
 
 ---
 
