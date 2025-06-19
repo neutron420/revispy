@@ -22,10 +22,7 @@ export const authRouter = router({
     .mutation(async ({ input }) => {
       const { email, firstName, lastName, password } = input;
 
-      // Check if user already exists
-      const existingUser = await prisma.user.findUnique({
-        where: { email },
-      });
+      const existingUser = await prisma.user.findUnique({ where: { email } });
 
       if (existingUser) {
         throw new TRPCError({
@@ -34,10 +31,8 @@ export const authRouter = router({
         });
       }
 
-      // Hash password
       const hashedPassword = await hashPassword(password);
 
-      // Create user
       const user = await prisma.user.create({
         data: {
           email,
@@ -54,7 +49,6 @@ export const authRouter = router({
         },
       });
 
-      // Generate token
       const token = generateToken(user.id);
 
       return {
@@ -69,10 +63,7 @@ export const authRouter = router({
     .mutation(async ({ input }) => {
       const { email, password } = input;
 
-      // Find user
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
+      const user = await prisma.user.findUnique({ where: { email } });
 
       if (!user) {
         throw new TRPCError({
@@ -81,7 +72,6 @@ export const authRouter = router({
         });
       }
 
-      // Verify password
       const isValidPassword = await comparePassword(password, user.password);
 
       if (!isValidPassword) {
@@ -91,7 +81,6 @@ export const authRouter = router({
         });
       }
 
-      // Generate token
       const token = generateToken(user.id);
 
       return {
@@ -134,5 +123,9 @@ export const authRouter = router({
     }
 
     return user;
+  }),
+
+  logout: publicProcedure.mutation(() => {
+    return { success: true, message: 'Logged out successfully' };
   }),
 });

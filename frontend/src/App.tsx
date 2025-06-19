@@ -1,35 +1,112 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import Login from './pages/login';
+import Step1 from './pages/signup/Step1';
+import Step2 from './pages/signup/Step2';
+import Dashboard from './pages/dashboard';
+import ProtectedRoute from './routes/ProtectedRoute';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Signup Flow Wrapper Component
+const SignupFlow: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  const [step1Data, setStep1Data] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+  });
+
+  const [step2Data, setStep2Data] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const updateStep1Data = (data: Partial<typeof step1Data>) => {
+    setStep1Data(prev => ({ ...prev, ...data }));
+  };
+
+  const updateStep2Data = (data: Partial<typeof step2Data>) => {
+    setStep2Data(prev => ({ ...prev, ...data }));
+  };
+
+  const handleStep1Next = () => {
+    navigate('/signup/step2');
+  };
+
+  const handleStep2Back = () => {
+    navigate('/signup/step1');
+  };
+
+  const handleStep2Submit = async () => {
+    setLoading(true);
+    try {
+      const completeFormData = {
+        ...step1Data,
+        ...step2Data,
+      };
+
+      console.log('Form submitted:', completeFormData);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Signup failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (location.pathname === '/signup/step1') {
+    return (
+      <Step1
+        formData={step1Data}
+        updateFormData={updateStep1Data}
+        onNext={handleStep1Next}
+      />
+    );
+  }
+
+  if (location.pathname === '/signup/step2') {
+    return (
+      <Step2
+        formData={step2Data}
+        updateFormData={updateStep2Data}
+        onSubmit={handleStep2Submit}
+        onBack={handleStep2Back}
+        loading={loading}
+      />
+    );
+  }
+
+  return <Navigate to="/signup/step1" />;
+};
+
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup/step1" element={<SignupFlow />} />
+      <Route path="/signup/step2" element={<SignupFlow />} />
 
-export default App
+      {/* Protected Route */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Catch-all route should redirect to login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  );
+};
+
+export default App;
